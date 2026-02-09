@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from './Button';
 
 interface WelcomeProps {
@@ -30,7 +30,9 @@ const Logo = () => (
 );
 
 const Welcome: React.FC<WelcomeProps> = ({ onLoginClick, onSignupClick }) => {
-    
+    const [shareUrl, setShareUrl] = useState('');
+    const [copied, setCopied] = useState(false);
+
     const CategoryButton: React.FC<{children: React.ReactNode}> = ({ children }) => (
         <button 
             onClick={onSignupClick}
@@ -39,6 +41,34 @@ const Welcome: React.FC<WelcomeProps> = ({ onLoginClick, onSignupClick }) => {
             {children}
         </button>
     );
+
+    useEffect(() => {
+        setShareUrl(window.location.origin);
+    }, []);
+
+    const handleCopy = async () => {
+        if (!shareUrl) return;
+        try {
+            await navigator.clipboard.writeText(shareUrl);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch {
+            setCopied(false);
+        }
+    };
+
+    const handleShare = async () => {
+        if (!shareUrl || !(navigator as any).share) return;
+        try {
+            await (navigator as any).share({
+                title: 'GigConnect',
+                text: 'Join GigConnect to find gigs and hire talent.',
+                url: shareUrl,
+            });
+        } catch {
+            // ignore
+        }
+    };
 
     return (
         <div className="w-full">
@@ -66,6 +96,28 @@ const Welcome: React.FC<WelcomeProps> = ({ onLoginClick, onSignupClick }) => {
                     <CategoryButton>Quick Gigs</CategoryButton>
                     <CategoryButton>Internships</CategoryButton>
                     <CategoryButton>International</CategoryButton>
+                </div>
+            </div>
+
+            <div className="mt-16 text-center">
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Invite & Grow</h2>
+                <p className="text-gray-600 dark:text-gray-300 mt-3">Share GigConnect with your network and bring new clients and freelancers.</p>
+                <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <input
+                        value={shareUrl}
+                        readOnly
+                        className="w-full sm:w-96 px-4 py-2 border rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 text-gray-700 dark:text-gray-100"
+                    />
+                    <div className="flex gap-2">
+                        <button onClick={handleCopy} className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+                            {copied ? 'Copied' : 'Copy Link'}
+                        </button>
+                        {(navigator as any)?.share && (
+                            <button onClick={handleShare} className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                                Share
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
 

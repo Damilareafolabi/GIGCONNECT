@@ -39,6 +39,52 @@ View your app in AI Studio: https://ai.studio/apps/drive/1COdxTW38pN8C6B1ELfuz3p
 
 This project is built with Vite and TypeScript. The VS Code Live Server extension will not compile `.tsx` files, so it will throw console errors. Use `npm run dev` or `npm run preview` instead.
 
+## Free Hosting (Vercel)
+
+1. Push this repo to GitHub.
+2. In Vercel: **New Project** → import the repo.
+3. Build command: `npm run build`
+4. Output directory: `dist`
+5. Environment variables:
+   `VITE_SUPABASE_URL`
+   `VITE_SUPABASE_ANON_KEY`
+   `VITE_ADMIN_EMAIL`
+   `VITE_API_URL` (only if Paystack server is deployed)
+
+## Custom Domain
+
+1. Buy a domain (Namecheap/GoDaddy/etc).
+2. In Vercel → Project → Domains → add your domain.
+3. Copy the DNS records Vercel shows and paste them in your domain provider.
+4. Update `public/robots.txt` and `public/sitemap.xml` to your real domain.
+
+## PWA (Installable App)
+
+This project is already configured as a PWA:
+- `public/manifest.webmanifest`
+- `public/sw.js`
+- `public/offline.html`
+
+After deployment, users can install it from the browser (Chrome → “Install App”).
+
+## Play Store (Android)
+
+Fastest path: wrap the PWA with Capacitor.
+
+1. Install Capacitor:
+   `npm install @capacitor/core @capacitor/cli`
+2. Initialize:
+   `npx cap init GigConnect com.gigconnect.app --web-dir=dist`
+3. Build the web app:
+   `npm run build`
+4. Add Android:
+   `npx cap add android`
+5. Open Android Studio:
+   `npx cap open android`
+6. Build and upload the APK/AAB to Google Play Console.
+
+Note: Use your production URL in Capacitor config when ready.
+
 ## Tailwind CSS
 
 Tailwind is installed via PostCSS. Do not use the CDN script in production.
