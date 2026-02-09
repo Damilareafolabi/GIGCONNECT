@@ -37,7 +37,16 @@ create table if not exists jobs (
   payment_status text,
   paid_amount numeric,
   platform_fee numeric,
-  paid_at timestamptz
+  paid_at timestamptz,
+  work_type text,
+  location text,
+  source_name text,
+  source_website text,
+  source_email text,
+  source_phone text,
+  verification_status text,
+  verification_note text,
+  safety_notes text
 );
 
 -- Applications

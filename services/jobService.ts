@@ -23,18 +23,19 @@ export const jobService = {
         const newJob: Job = {
             ...jobData,
             id: `job-${Date.now()}`,
-            status: JobStatus.PendingApproval,
+            status: JobStatus.Open,
             createdAt: new Date().toISOString(),
             paymentStatus: 'Unpaid',
+            verificationStatus: jobData.verificationStatus || 'Pending',
         };
         jobs.push(newJob);
         storageService.saveJobs(jobs);
         supabaseTableSyncService.syncItem('jobs', newJob);
 
-        // Notify admin
+        // Notify admin for verification
         const admins = storageService.getUsers().filter(u => u.role === UserRole.Admin);
         admins.forEach(admin => {
-            notificationService.createNotification(admin.id, `New job "${newJob.title}" requires approval.`);
+            notificationService.createNotification(admin.id, `New job "${newJob.title}" requires source verification.`);
         });
 
         return newJob;

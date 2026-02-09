@@ -8,6 +8,7 @@ const Privacy: React.FC = () => {
                 <div className="space-y-4 text-gray-700 dark:text-gray-300 text-sm">
                     <p>We respect your privacy. This platform stores profile and activity data locally in your browser for this demo environment.</p>
                     <p>When the production platform is live, we will only collect the information needed to provide marketplace services, payouts, and security.</p>
+                    <p>Verification details (company name, website, email, or phone) are collected to help validate job sources and keep the community safe.</p>
                     <p>We do not sell personal data. We only share information required to complete payments and comply with regulations.</p>
                     <p>If you have questions, contact us via the Contact page.</p>
                 </div>
@@ -17,4 +18,3 @@ const Privacy: React.FC = () => {
 };
 
 export default Privacy;
-

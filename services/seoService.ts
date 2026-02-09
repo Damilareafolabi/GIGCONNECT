@@ -105,6 +105,13 @@ export const seoService = {
             return;
         }
 
+        if (view === 'safety') {
+            setTitle('Safety Policy | GigConnect');
+            setMeta('description', 'Safety guidelines and verification policies for GigConnect.');
+            setCanonical(`${origin}/safety`);
+            return;
+        }
+
         seoService.applyDefault();
     },
 };

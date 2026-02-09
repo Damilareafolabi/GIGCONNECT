@@ -91,6 +91,12 @@ Note: Use your production URL in Capacitor config when ready.
 - Blog auto-publishing is enabled in **Admin → Automation Center**.
 - The auto-blog creates Work News posts on a schedule and can be triggered manually in **Admin → Blog**.
 
+## Safety + Verification
+
+- Job posts require source verification details (company name + website/email/phone).
+- Jobs are visible immediately but labeled **Verification Pending** until reviewed.
+- Safety guidelines are available in the **Safety** page.
+
 ## Tailwind CSS
 
 Tailwind is installed via PostCSS. Do not use the CDN script in production.

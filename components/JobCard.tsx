@@ -35,6 +35,18 @@ const JobCard: React.FC<JobCardProps> = ({ job, userRole, navigate, onApply, onV
         }
     };
 
+    const getVerificationBadge = () => {
+        switch (job.verificationStatus) {
+            case 'Verified':
+                return 'text-green-700 bg-green-100 dark:text-green-200 dark:bg-green-900';
+            case 'Rejected':
+                return 'text-red-700 bg-red-100 dark:text-red-200 dark:bg-red-900';
+            case 'Pending':
+            default:
+                return 'text-yellow-700 bg-yellow-100 dark:text-yellow-200 dark:bg-yellow-900';
+        }
+    };
+
     return (
         <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden flex flex-col justify-between transition-transform transform hover:scale-105">
             <div className="p-6">
@@ -43,12 +55,22 @@ const JobCard: React.FC<JobCardProps> = ({ job, userRole, navigate, onApply, onV
                         Highlighted
                     </div>
                 )}
-                <div className="flex justify-between items-start">
+                <div className="flex justify-between items-start gap-2">
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{job.title}</h3>
-                    {userRole && <span className={`text-xs font-semibold px-2 py-1 rounded-full ${getStatusColor()}`}>{job.status}</span>}
+                    <div className="flex flex-col items-end gap-1">
+                        {userRole && <span className={`text-xs font-semibold px-2 py-1 rounded-full ${getStatusColor()}`}>{job.status}</span>}
+                        <span className={`text-[11px] font-semibold px-2 py-1 rounded-full ${getVerificationBadge()}`}>
+                            {job.verificationStatus || 'Pending Verification'}
+                        </span>
+                    </div>
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">by {employerName}</p>
                 <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 mb-4">{job.category}</p>
+
+                <div className="flex flex-wrap gap-2 text-xs text-gray-500 dark:text-gray-400 mb-3">
+                    {job.workType && <span className="px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">{job.workType}</span>}
+                    {job.location && <span className="px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">{job.location}</span>}
+                </div>
                 
                 <p className="text-gray-700 dark:text-gray-300 text-sm mb-4 h-16 overflow-hidden">
                     {job.description.substring(0, 100)}{job.description.length > 100 && '...'}

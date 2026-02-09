@@ -60,6 +60,15 @@ export interface Job {
     paidAmount?: number;
     platformFee?: number;
     paidAt?: string;
+    workType?: 'Remote' | 'On-site' | 'Hybrid';
+    location?: string;
+    sourceName?: string;
+    sourceWebsite?: string;
+    sourceEmail?: string;
+    sourcePhone?: string;
+    verificationStatus?: 'Pending' | 'Verified' | 'Rejected';
+    verificationNote?: string;
+    safetyNotes?: string;
 }
 
 export interface Application {

@@ -136,10 +136,19 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate }) => {
                         <div>
                             <p className="font-bold text-gray-800 dark:text-gray-100">{job.title}</p>
                             <p className="text-sm text-gray-600 dark:text-gray-400">{job.category} - ${job.payment}</p>
+                            <p className="text-xs text-gray-500">Source: {job.sourceName || 'N/A'}</p>
+                            {job.sourceWebsite && <p className="text-xs text-gray-500">Website: {job.sourceWebsite}</p>}
+                            {job.sourceEmail && <p className="text-xs text-gray-500">Email: {job.sourceEmail}</p>}
+                            {job.sourcePhone && <p className="text-xs text-gray-500">Phone: {job.sourcePhone}</p>}
+                            {job.workType && <p className="text-xs text-gray-500">Work Type: {job.workType}</p>}
+                            {job.location && <p className="text-xs text-gray-500">Location: {job.location}</p>}
                             <p className="text-sm text-gray-700 dark:text-gray-300 mt-2">{job.description}</p>
+                            {job.safetyNotes && (
+                                <p className="text-xs text-gray-500 mt-2">Safety Notes: {job.safetyNotes}</p>
+                            )}
                         </div>
                         <div className="flex flex-col gap-2">
-                            <Button onClick={() => handleApproveJob(job.id)} className="w-auto">Approve</Button>
+                            <Button onClick={() => handleApproveJob(job.id)} className="w-auto">Verify</Button>
                             <Button onClick={() => handleRejectJob(job.id)} variant="danger" className="w-auto">Reject</Button>
                         </div>
                     </div>
@@ -213,7 +222,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate }) => {
             <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
                 <nav className="-mb-px flex space-x-8 overflow-x-auto" aria-label="Tabs">
                     <button onClick={() => setActiveTab('users')} className={`${activeTab === 'users' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}>Pending Users ({pendingUsers.length})</button>
-                    <button onClick={() => setActiveTab('jobs')} className={`${activeTab === 'jobs' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}>Pending Jobs ({pendingJobs.length})</button>
+                    <button onClick={() => setActiveTab('jobs')} className={`${activeTab === 'jobs' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}>Job Verification ({pendingJobs.length})</button>
                     <button onClick={() => setActiveTab('commission')} className={`${activeTab === 'commission' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}>Success Fees</button>
                     <button onClick={() => setActiveTab('userMgmt')} className={`${activeTab === 'userMgmt' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}>User Management</button>
                     <button onClick={() => setActiveTab('subscribers')} className={`${activeTab === 'subscribers' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}>Subscribers</button>

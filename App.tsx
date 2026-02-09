@@ -28,11 +28,12 @@ import AIChatbot from './components/AIChatbot';
 import Blog from './components/Blog';
 import BlogPost from './components/BlogPost';
 import { seoService } from './services/seoService';
+import Safety from './components/Safety';
 
 const AppContent: React.FC = () => {
     const { user, isGodMode } = useAuth();
     const [currentView, setCurrentView] = useState<View>({ name: 'dashboard' });
-    const [authView, setAuthView] = useState('welcome'); // welcome, login, signup, terms, privacy, contact, blog, blogPost
+    const [authView, setAuthView] = useState('welcome'); // welcome, login, signup, terms, privacy, contact, blog, blogPost, safety
     const [publicBlogSlug, setPublicBlogSlug] = useState<string | null>(null);
     useBackgroundAgents(user);
 
@@ -54,12 +55,13 @@ const AppContent: React.FC = () => {
 
     if (!user) {
         const isAuthForm = authView === 'login' || authView === 'signup';
-        const isLegal = authView === 'terms' || authView === 'privacy' || authView === 'contact';
+        const isLegal = authView === 'terms' || authView === 'privacy' || authView === 'contact' || authView === 'safety';
 
         const renderPublicView = () => {
             if (authView === 'terms') return <Terms />;
             if (authView === 'privacy') return <Privacy />;
             if (authView === 'contact') return <Contact />;
+            if (authView === 'safety') return <Safety />;
             if (authView === 'blog') return <Blog isPublic onOpenPost={(post) => { setPublicBlogSlug(post.slug); setAuthView('blogPost'); }} />;
             if (authView === 'blogPost') return <BlogPost slug={publicBlogSlug || undefined} onBack={() => setAuthView('blog')} />;
             return <Welcome onLoginClick={() => setAuthView('login')} onSignupClick={() => setAuthView('signup')} onBlogClick={() => setAuthView('blog')} />;
@@ -110,6 +112,8 @@ const AppContent: React.FC = () => {
                 return <Privacy />;
             case 'contact':
                 return <Contact />;
+            case 'safety':
+                return <Safety />;
             case 'blog':
                 return <Blog onOpenPost={(post) => navigate('blogPost', { slug: post.slug })} />;
             case 'blogPost':

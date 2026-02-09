@@ -27,6 +27,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigate }) => {
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [applyingJob, setApplyingJob] = useState<Job | null>(null);
     const [coverLetter, setCoverLetter] = useState('');
+    const [safetyAcknowledge, setSafetyAcknowledge] = useState(false);
     const [activeTab, setActiveTab] = useState('find'); // 'find' or 'applied'
     const [isGenerating, setIsGenerating] = useState(false);
 
@@ -74,6 +75,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigate }) => {
             return;
         }
         setApplyingJob(job);
+        setSafetyAcknowledge(false);
     };
 
     const handleGenerateCoverLetter = async () => {
@@ -92,6 +94,11 @@ const Dashboard: React.FC<DashboardProps> = ({ navigate }) => {
     const handleApplySubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!applyingJob || !user) return;
+        const needsSafetyAck = applyingJob.verificationStatus !== 'Verified' || applyingJob.workType !== 'Remote';
+        if (needsSafetyAck && !safetyAcknowledge) {
+            showToast('Please acknowledge the safety notice before applying.', 'info');
+            return;
+        }
 
         try {
             jobService.applyForJob(applyingJob.id, user.id, coverLetter);
@@ -183,6 +190,12 @@ const Dashboard: React.FC<DashboardProps> = ({ navigate }) => {
 
             <Modal isOpen={!!applyingJob} onClose={() => setApplyingJob(null)} title={`Apply to ${applyingJob?.title}`}>
                 <form onSubmit={handleApplySubmit}>
+                    {applyingJob && (applyingJob.verificationStatus !== 'Verified' || applyingJob.workType !== 'Remote') && (
+                        <div className="mb-4 p-3 rounded-lg bg-yellow-50 border border-yellow-200 text-yellow-800 text-sm">
+                            This job is {applyingJob.verificationStatus === 'Verified' ? 'verified' : 'not yet verified'} and may involve in-person work.
+                            Please verify details, meet in safe public locations, and avoid sharing sensitive information.
+                        </div>
+                    )}
                     <div className="mb-4">
                         <div className="flex justify-between items-center mb-2">
                             <label htmlFor="coverLetter" className="block text-gray-700 dark:text-gray-300 text-sm font-bold">Cover Letter</label>
@@ -200,6 +213,17 @@ const Dashboard: React.FC<DashboardProps> = ({ navigate }) => {
                             required
                         ></textarea>
                     </div>
+                    {applyingJob && (applyingJob.verificationStatus !== 'Verified' || applyingJob.workType !== 'Remote') && (
+                        <label className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300 mb-4">
+                            <input
+                                type="checkbox"
+                                checked={safetyAcknowledge}
+                                onChange={(e) => setSafetyAcknowledge(e.target.checked)}
+                                className="mt-1"
+                            />
+                            I understand this job is not fully verified or may involve physical work, and I will follow safety guidelines.
+                        </label>
+                    )}
                     <Button type="submit">Submit Application</Button>
                 </form>
             </Modal>

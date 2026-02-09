@@ -10,7 +10,7 @@ export const adminService = {
     },
 
     getPendingJobs: (): Job[] => {
-        return storageService.getJobs().filter(job => job.status === JobStatus.PendingApproval);
+        return storageService.getJobs().filter(job => job.verificationStatus === 'Pending');
     },
 
     approveUser: (userId: string): User | undefined => {
@@ -38,9 +38,11 @@ export const adminService = {
         const jobIndex = jobs.findIndex(j => j.id === jobId);
         if (jobIndex !== -1) {
             jobs[jobIndex].status = JobStatus.Open;
+            jobs[jobIndex].verificationStatus = 'Verified';
+            jobs[jobIndex].verificationNote = 'Verified by admin.';
             storageService.saveJobs(jobs);
             supabaseTableSyncService.syncItem('jobs', jobs[jobIndex]);
-            notificationService.createNotification(jobs[jobIndex].employerId, `Your job post "${jobs[jobIndex].title}" has been approved.`);
+            notificationService.createNotification(jobs[jobIndex].employerId, `Your job post "${jobs[jobIndex].title}" has been verified.`);
             return jobs[jobIndex];
         }
         return undefined;
@@ -51,9 +53,11 @@ export const adminService = {
         const jobIndex = jobs.findIndex(j => j.id === jobId);
         if (jobIndex !== -1) {
             jobs[jobIndex].status = JobStatus.Rejected;
+            jobs[jobIndex].verificationStatus = 'Rejected';
+            jobs[jobIndex].verificationNote = 'Source verification failed.';
             storageService.saveJobs(jobs);
             supabaseTableSyncService.syncItem('jobs', jobs[jobIndex]);
-            notificationService.createNotification(jobs[jobIndex].employerId, `Your job post "${jobs[jobIndex].title}" was rejected.`);
+            notificationService.createNotification(jobs[jobIndex].employerId, `Your job post "${jobs[jobIndex].title}" was rejected after verification review.`);
             return jobs[jobIndex];
         }
         return undefined;
