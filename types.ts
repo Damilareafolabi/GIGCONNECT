@@ -28,6 +28,7 @@ export interface User {
     approved: boolean;
     referralCode?: string;
     referredBy?: string;
+    country?: string;
 
     // Job Seeker specific
     profileBio?: string;
@@ -64,6 +65,7 @@ export interface Job {
     paidAt?: string;
     workType?: 'Remote' | 'On-site' | 'Hybrid';
     location?: string;
+    country?: string;
     sourceName?: string;
     sourceWebsite?: string;
     sourceEmail?: string;

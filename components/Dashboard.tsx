@@ -25,6 +25,8 @@ const Dashboard: React.FC<DashboardProps> = ({ navigate }) => {
     const [myApplications, setMyApplications] = useState<Application[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [selectedWorkType, setSelectedWorkType] = useState('All');
+    const [countryFilter, setCountryFilter] = useState('');
     const [applyingJob, setApplyingJob] = useState<Job | null>(null);
     const [coverLetter, setCoverLetter] = useState('');
     const [safetyAcknowledge, setSafetyAcknowledge] = useState(false);
@@ -60,14 +62,30 @@ const Dashboard: React.FC<DashboardProps> = ({ navigate }) => {
     }, [jobs, user]);
 
     const filteredJobs = useMemo(() => {
+        const userCountry = user?.country?.trim().toLowerCase();
         return jobs
             .filter(job => {
                 const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) || job.description.toLowerCase().includes(searchTerm.toLowerCase());
                 const matchesCategory = selectedCategory === 'All' || job.category === selectedCategory;
-                return matchesSearch && matchesCategory;
+                const jobCountry = job.country?.toLowerCase() || '';
+                const matchesCountry = !countryFilter || jobCountry.includes(countryFilter.toLowerCase());
+
+                let matchesWorkType = true;
+                if (selectedWorkType === 'Remote') matchesWorkType = job.workType === 'Remote';
+                if (selectedWorkType === 'On-site') matchesWorkType = job.workType === 'On-site';
+                if (selectedWorkType === 'Hybrid') matchesWorkType = job.workType === 'Hybrid';
+                if (selectedWorkType === 'International') {
+                    if (userCountry) {
+                        matchesWorkType = jobCountry && jobCountry !== userCountry;
+                    } else {
+                        matchesWorkType = job.workType === 'Remote' || !!jobCountry;
+                    }
+                }
+
+                return matchesSearch && matchesCategory && matchesCountry && matchesWorkType;
             })
             .sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0));
-    }, [jobs, searchTerm, selectedCategory]);
+    }, [jobs, searchTerm, selectedCategory, selectedWorkType, countryFilter, user?.country]);
 
     const handleApplyClick = (job: Job) => {
         if (myApplications.some(app => app.jobId === job.id)) {
@@ -117,7 +135,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigate }) => {
             <h1 className="text-3xl font-bold mb-2 text-gray-800 dark:text-gray-100">Welcome, {user?.name}!</h1>
             <p className="mb-6 text-gray-600 dark:text-gray-300">Here are the latest opportunities.</p>
 
-            <div className="mb-6 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md flex flex-col sm:flex-row gap-4">
+            <div className="mb-6 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md flex flex-col lg:flex-row gap-4">
                 <input
                     type="text"
                     placeholder="Search for jobs..."
@@ -134,6 +152,25 @@ const Dashboard: React.FC<DashboardProps> = ({ navigate }) => {
                     <option value="All">All Categories</option>
                     {JOB_CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
                 </select>
+                <select
+                    className="shadow appearance-none border rounded w-full sm:w-1/3 py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline"
+                    value={selectedWorkType}
+                    onChange={(e) => setSelectedWorkType(e.target.value)}
+                    aria-label="Filter by work type"
+                >
+                    <option value="All">All Work Types</option>
+                    <option value="Remote">Remote</option>
+                    <option value="On-site">On-site</option>
+                    <option value="Hybrid">Hybrid</option>
+                    <option value="International">International</option>
+                </select>
+                <input
+                    type="text"
+                    placeholder="Filter by country..."
+                    className="shadow appearance-none border rounded w-full sm:w-1/3 py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline"
+                    value={countryFilter}
+                    onChange={(e) => setCountryFilter(e.target.value)}
+                />
             </div>
 
             <div className="mb-6 border-b border-gray-200 dark:border-gray-700">

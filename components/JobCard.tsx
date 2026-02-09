@@ -70,6 +70,7 @@ const JobCard: React.FC<JobCardProps> = ({ job, userRole, navigate, onApply, onV
                 <div className="flex flex-wrap gap-2 text-xs text-gray-500 dark:text-gray-400 mb-3">
                     {job.workType && <span className="px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">{job.workType}</span>}
                     {job.location && <span className="px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">{job.location}</span>}
+                    {job.country && <span className="px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">{job.country}</span>}
                 </div>
                 
                 <p className="text-gray-700 dark:text-gray-300 text-sm mb-4 h-16 overflow-hidden">

@@ -21,6 +21,7 @@ export const jobService = {
 
     createJob: (jobData: Omit<Job, 'id' | 'status' | 'createdAt' | 'hiredUserId'>): Job => {
         const jobs = storageService.getJobs();
+        const derivedCountry = jobData.country || (jobData.workType === 'Remote' ? 'Worldwide' : undefined);
         const newJob: Job = {
             ...jobData,
             id: `job-${Date.now()}`,
@@ -28,6 +29,7 @@ export const jobService = {
             createdAt: new Date().toISOString(),
             paymentStatus: 'Unpaid',
             verificationStatus: jobData.verificationStatus || 'Pending',
+            country: derivedCountry,
         };
         jobs.push(newJob);
         storageService.saveJobs(jobs);

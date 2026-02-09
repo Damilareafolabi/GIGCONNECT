@@ -96,6 +96,7 @@ Note: Use your production URL in Capacitor config when ready.
 - Job posts require source verification details (company name + website/email/phone).
 - Jobs are visible immediately but labeled **Verification Pending** until reviewed.
 - Safety guidelines are available in the **Safety** page.
+- Jobs support **Remote / On-site / Hybrid** and optional **country** for worldwide matching.
 
 ## Referral Program
 
@@ -131,7 +132,7 @@ Tailwind is installed via PostCSS. Do not use the CDN script in production.
 
 The app will sync all data to Supabase automatically (no code changes needed). Users will be authenticated by Supabase, and profile data is synced via the Supabase tables.
 
-If you already ran the schema before, re-run it to add the new `blog_posts` table and RLS policies.
+If you already ran the schema before, re-run it to add the new columns/tables (blog + referrals + job verification + country).
 
 ## Demo Seed Data
 

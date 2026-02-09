@@ -142,6 +142,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate }) => {
                             {job.sourcePhone && <p className="text-xs text-gray-500">Phone: {job.sourcePhone}</p>}
                             {job.workType && <p className="text-xs text-gray-500">Work Type: {job.workType}</p>}
                             {job.location && <p className="text-xs text-gray-500">Location: {job.location}</p>}
+                            {job.country && <p className="text-xs text-gray-500">Country: {job.country}</p>}
                             <p className="text-sm text-gray-700 dark:text-gray-300 mt-2">{job.description}</p>
                             {job.safetyNotes && (
                                 <p className="text-xs text-gray-500 mt-2">Safety Notes: {job.safetyNotes}</p>

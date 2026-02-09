@@ -168,6 +168,9 @@ const Profile: React.FC<ProfileProps> = ({ navigate, reviewJobId }) => {
                 
                 <div className="mt-8">
                     <form onSubmit={handleSubmit}>
+                        <div className="mb-4">
+                            <Input id="country" name="country" label="Country" type="text" value={formData.country || ''} onChange={handleChange} />
+                        </div>
                          {user.role === UserRole.JobSeeker && <>
                              <div className="mb-4">
                                 <div className="flex justify-between items-center mb-2">

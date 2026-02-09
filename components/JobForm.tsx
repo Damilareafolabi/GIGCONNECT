@@ -29,6 +29,7 @@ const JobForm: React.FC<JobFormProps> = ({ navigate, jobToEdit }) => {
         deadline: '',
         workType: 'Remote',
         location: '',
+        country: '',
         sourceName: '',
         sourceWebsite: '',
         sourceEmail: '',
@@ -49,6 +50,7 @@ const JobForm: React.FC<JobFormProps> = ({ navigate, jobToEdit }) => {
                 deadline: new Date(jobToEdit.deadline).toISOString().split('T')[0],
                 workType: jobToEdit.workType || 'Remote',
                 location: jobToEdit.location || '',
+                country: jobToEdit.country || '',
                 sourceName: jobToEdit.sourceName || '',
                 sourceWebsite: jobToEdit.sourceWebsite || '',
                 sourceEmail: jobToEdit.sourceEmail || '',
@@ -114,6 +116,10 @@ const JobForm: React.FC<JobFormProps> = ({ navigate, jobToEdit }) => {
             showToast('Please provide a location for on-site or hybrid work.', 'info');
             return;
         }
+        if (formData.workType !== 'Remote' && !formData.country.trim()) {
+            showToast('Please provide a country for on-site or hybrid work.', 'info');
+            return;
+        }
         if (formData.workType !== 'Remote' && !formData.safetyNotes.trim()) {
             showToast('Please include safety notes for on-site or hybrid work.', 'info');
             return;
@@ -136,6 +142,7 @@ const JobForm: React.FC<JobFormProps> = ({ navigate, jobToEdit }) => {
                 isFeatured: false, // Used for curated visibility
                 workType: formData.workType as Job['workType'],
                 location: formData.location,
+                country: formData.country,
                 sourceName: formData.sourceName,
                 sourceWebsite: formData.sourceWebsite,
                 sourceEmail: formData.sourceEmail,
@@ -211,6 +218,9 @@ const JobForm: React.FC<JobFormProps> = ({ navigate, jobToEdit }) => {
                         </div>
                         {formData.workType !== 'Remote' && (
                             <Input id="location" name="location" label="Work Location / City" type="text" value={formData.location} onChange={handleChange} required />
+                        )}
+                        {formData.workType !== 'Remote' && (
+                            <Input id="country" name="country" label="Country" type="text" value={formData.country} onChange={handleChange} required />
                         )}
                         <div>
                             <label htmlFor="safetyNotes" className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Safety Notes (required for physical jobs)</label>

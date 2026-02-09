@@ -48,9 +48,9 @@ const seedData = () => {
     const shouldSeed = String((import.meta as any)?.env?.VITE_SEED_LOCAL || '').toLowerCase() === 'true';
     if (!shouldSeed) return;
     if (!get('users')) {
-        const admin: User = { id: 'admin-1', email: 'admin@gig.co', password: 'admin', name: 'Admin User', role: UserRole.Admin, approved: true, referralCode: 'ref-admin' };
-        const employer: User = { id: 'employer-1', email: 'employer@gig.co', password: 'password', name: 'Tech Solutions Inc.', role: UserRole.Employer, approved: true, companyName: 'Tech Solutions Inc.', companyDescription: 'We build amazing software.', industry: 'Technology', website: 'https://example.com', referralCode: 'ref-employer' };
-        const seeker: User = { id: 'seeker-1', email: 'seeker@gig.co', password: 'password', name: 'Jane Doe', role: UserRole.JobSeeker, approved: true, skills: ['React', 'TypeScript', 'Node.js'], profileBio: 'Experienced full-stack developer seeking new challenges.', experienceLevel: 'Expert', availability: 'Full-time', portfolioLinks: ['https://github.com/janedoe'], referralCode: 'ref-seeker' };
+        const admin: User = { id: 'admin-1', email: 'admin@gig.co', password: 'admin', name: 'Admin User', role: UserRole.Admin, approved: true, referralCode: 'ref-admin', country: 'United States' };
+        const employer: User = { id: 'employer-1', email: 'employer@gig.co', password: 'password', name: 'Tech Solutions Inc.', role: UserRole.Employer, approved: true, companyName: 'Tech Solutions Inc.', companyDescription: 'We build amazing software.', industry: 'Technology', website: 'https://example.com', referralCode: 'ref-employer', country: 'Nigeria' };
+        const seeker: User = { id: 'seeker-1', email: 'seeker@gig.co', password: 'password', name: 'Jane Doe', role: UserRole.JobSeeker, approved: true, skills: ['React', 'TypeScript', 'Node.js'], profileBio: 'Experienced full-stack developer seeking new challenges.', experienceLevel: 'Expert', availability: 'Full-time', portfolioLinks: ['https://github.com/janedoe'], referralCode: 'ref-seeker', country: 'Kenya' };
         set<User[]>('users', [admin, employer, seeker]);
 
         const jobs: Job[] = [
@@ -67,6 +67,7 @@ const seedData = () => {
                 isFeatured: true,
                 paymentStatus: 'Unpaid',
                 workType: 'Remote',
+                country: 'Worldwide',
                 verificationStatus: 'Verified',
                 sourceName: 'Tech Solutions Inc.',
                 sourceWebsite: 'https://example.com',
@@ -85,6 +86,7 @@ const seedData = () => {
                 paymentStatus: 'Unpaid',
                 workType: 'Hybrid',
                 location: 'Lagos, Nigeria',
+                country: 'Nigeria',
                 verificationStatus: 'Pending',
                 sourceName: 'Tech Solutions Inc.',
                 sourceWebsite: 'https://example.com',
@@ -102,6 +104,7 @@ const seedData = () => {
                 isFeatured: false,
                 paymentStatus: 'Unpaid',
                 workType: 'Remote',
+                country: 'Worldwide',
                 verificationStatus: 'Pending',
                 sourceName: 'Tech Solutions Inc.',
                 sourceWebsite: 'https://example.com',
