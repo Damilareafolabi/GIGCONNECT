@@ -2,6 +2,7 @@ import { storageService } from './storageService';
 import { User, UserRole } from '../types';
 import { supabase, isSupabaseConfigured } from './supabaseClient';
 import { supabaseTableSyncService } from './supabaseTableSyncService';
+import { referralService } from './referralService';
 
 const SESSION_KEY = 'currentUser';
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
@@ -80,6 +81,9 @@ export const authService = {
             throw new Error('User with this email already exists.');
         }
 
+        const referrerId = window.localStorage.getItem('gigconnect_referrer') || undefined;
+        const referralCode = `ref-${Date.now().toString(36)}-${Math.floor(Math.random() * 999).toString(36)}`;
+
         if (isSupabaseConfigured && supabase) {
             const { data, error } = await supabase.auth.signUp({
                 email: normalizedEmail,
@@ -95,9 +99,14 @@ export const authService = {
                 approved: true,
                 skills: role === 'JobSeeker' ? [] : undefined,
                 companyName: role === 'Employer' ? name : undefined,
+                referralCode,
+                referredBy: referrerId && referrerId !== data.user?.id ? referrerId : undefined,
             };
             storageService.saveUsers([...users, newUser]);
             supabaseTableSyncService.syncItem('users', newUser);
+            if (referrerId && referrerId !== newUser.id) {
+                referralService.recordSignup(referrerId, newUser.id);
+            }
 
             if (data.session) {
                 sessionStorage.setItem(SESSION_KEY, JSON.stringify(newUser));
@@ -114,9 +123,14 @@ export const authService = {
             approved: true, // Automatically approve user
             skills: role === 'JobSeeker' ? [] : undefined,
             companyName: role === 'Employer' ? name : undefined,
+            referralCode,
+            referredBy: referrerId,
         };
 
         storageService.saveUsers([...users, newUser]);
+        if (referrerId && referrerId !== newUser.id) {
+            referralService.recordSignup(referrerId, newUser.id);
+        }
         sessionStorage.setItem(SESSION_KEY, JSON.stringify(newUser));
         return newUser;
     },

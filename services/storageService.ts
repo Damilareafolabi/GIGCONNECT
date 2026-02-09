@@ -1,5 +1,5 @@
 
-import { User, Job, Application, Message, Notification, UserRole, JobStatus, Review, LogEntry, Subscriber, AutomationSettings, AutomationEvent, RadarFinding, RadarScan, GrowthCampaign, OutreachLead, HealingAction, HealthIncident, WalletTransaction, PayoutRequest, PlatformTransaction, BlogPost } from '../types';
+import { User, Job, Application, Message, Notification, UserRole, JobStatus, Review, LogEntry, Subscriber, AutomationSettings, AutomationEvent, RadarFinding, RadarScan, GrowthCampaign, OutreachLead, HealingAction, HealthIncident, WalletTransaction, PayoutRequest, PlatformTransaction, BlogPost, ReferralEvent } from '../types';
 
 const get = <T,>(key: string): T | null => {
     try {
@@ -41,6 +41,7 @@ const DATABASE_KEYS = [
     'platformTransactions',
     'platformRevenue',
     'blogPosts',
+    'referralEvents',
 ] as const;
 
 const seedData = () => {
@@ -48,9 +49,9 @@ const seedData = () => {
     const shouldSeed = !hasSupabase || String((import.meta as any)?.env?.VITE_SEED_LOCAL || '').toLowerCase() === 'true';
     if (!shouldSeed) return;
     if (!get('users')) {
-        const admin: User = { id: 'admin-1', email: 'admin@gig.co', password: 'admin', name: 'Admin User', role: UserRole.Admin, approved: true };
-        const employer: User = { id: 'employer-1', email: 'employer@gig.co', password: 'password', name: 'Tech Solutions Inc.', role: UserRole.Employer, approved: true, companyName: 'Tech Solutions Inc.', companyDescription: 'We build amazing software.', industry: 'Technology', website: 'https://example.com' };
-        const seeker: User = { id: 'seeker-1', email: 'seeker@gig.co', password: 'password', name: 'Jane Doe', role: UserRole.JobSeeker, approved: true, skills: ['React', 'TypeScript', 'Node.js'], profileBio: 'Experienced full-stack developer seeking new challenges.', experienceLevel: 'Expert', availability: 'Full-time', portfolioLinks: ['https://github.com/janedoe'] };
+        const admin: User = { id: 'admin-1', email: 'admin@gig.co', password: 'admin', name: 'Admin User', role: UserRole.Admin, approved: true, referralCode: 'ref-admin' };
+        const employer: User = { id: 'employer-1', email: 'employer@gig.co', password: 'password', name: 'Tech Solutions Inc.', role: UserRole.Employer, approved: true, companyName: 'Tech Solutions Inc.', companyDescription: 'We build amazing software.', industry: 'Technology', website: 'https://example.com', referralCode: 'ref-employer' };
+        const seeker: User = { id: 'seeker-1', email: 'seeker@gig.co', password: 'password', name: 'Jane Doe', role: UserRole.JobSeeker, approved: true, skills: ['React', 'TypeScript', 'Node.js'], profileBio: 'Experienced full-stack developer seeking new challenges.', experienceLevel: 'Expert', availability: 'Full-time', portfolioLinks: ['https://github.com/janedoe'], referralCode: 'ref-seeker' };
         set<User[]>('users', [admin, employer, seeker]);
 
         const jobs: Job[] = [
@@ -186,6 +187,7 @@ const seedData = () => {
             ];
             set<BlogPost[]>('blogPosts', seedPosts);
         }
+        if (!get('referralEvents')) set<ReferralEvent[]>('referralEvents', []);
     }
 };
 
@@ -218,6 +220,8 @@ export const storageService = {
     savePlatformRevenue: (amount: number) => set('platformRevenue', amount),
     getBlogPosts: () => get<BlogPost[]>('blogPosts') || [],
     saveBlogPosts: (posts: BlogPost[]) => set('blogPosts', posts),
+    getReferralEvents: () => get<ReferralEvent[]>('referralEvents') || [],
+    saveReferralEvents: (events: ReferralEvent[]) => set('referralEvents', events),
     getAutomationSettings: () => get<AutomationSettings>('automationSettings'),
     saveAutomationSettings: (settings: AutomationSettings) => set('automationSettings', settings),
     getAutomationEvents: () => get<AutomationEvent[]>('automationEvents') || [],

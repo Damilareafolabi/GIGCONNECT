@@ -12,6 +12,8 @@ import { useToast } from '../contexts/ToastContext';
 import { geminiService } from '../services/geminiService';
 import { fileToBase64 } from '../utils/fileUtils';
 import Spinner from './Spinner';
+import { referralService } from '../services/referralService';
+import { REFERRAL_BONUS } from '../constants';
 
 interface ProfileProps {
     navigate: NavigateFunction;
@@ -33,6 +35,7 @@ const Profile: React.FC<ProfileProps> = ({ navigate, reviewJobId }) => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [isAnalyzingVideo, setIsAnalyzingVideo] = useState(false);
     const [videoSummary, setVideoSummary] = useState('');
+    const [referralCopied, setReferralCopied] = useState(false);
 
     useEffect(() => {
         if (user) setReviews(reviewService.getReviewsForUser(user.id));
@@ -46,6 +49,21 @@ const Profile: React.FC<ProfileProps> = ({ navigate, reviewJobId }) => {
     }, [user, reviewJobId]);
     
     if (!user) return <p>Loading profile...</p>;
+
+    const referralLink = `${window.location.origin}/?ref=${user.id}`;
+    const referralEvents = referralService.getEventsByReferrer(user.id);
+    const referralApplications = referralEvents.filter(ev => ev.type === 'application').length;
+    const referralEarnings = referralEvents.reduce((sum, ev) => sum + (ev.amount || 0), 0);
+
+    const handleCopyReferral = async () => {
+        try {
+            await navigator.clipboard.writeText(referralLink);
+            setReferralCopied(true);
+            setTimeout(() => setReferralCopied(false), 2000);
+        } catch {
+            setReferralCopied(false);
+        }
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -117,6 +135,36 @@ const Profile: React.FC<ProfileProps> = ({ navigate, reviewJobId }) => {
         <div className="container mx-auto max-w-4xl">
             <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
                 {/* ... existing header code ... */}
+
+                <div className="mt-8 border-t pt-6">
+                    <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">Referral Center</h2>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                        Earn ${REFERRAL_BONUS} when someone you referred applies for a job.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-3 mb-4">
+                        <input
+                            value={referralLink}
+                            readOnly
+                            className="flex-1 px-4 py-2 border rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 text-gray-700 dark:text-gray-100"
+                        />
+                        <Button onClick={handleCopyReferral} className="w-auto">{referralCopied ? 'Copied' : 'Copy Link'}</Button>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+                        <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                            <p className="text-xs text-gray-500">Total Referrals</p>
+                            <p className="text-xl font-bold text-gray-800 dark:text-gray-100">{referralEvents.length}</p>
+                        </div>
+                        <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                            <p className="text-xs text-gray-500">Applications</p>
+                            <p className="text-xl font-bold text-gray-800 dark:text-gray-100">{referralApplications}</p>
+                        </div>
+                        <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                            <p className="text-xs text-gray-500">Referral Earnings</p>
+                            <p className="text-xl font-bold text-green-600">${referralEarnings.toFixed(2)}</p>
+                        </div>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-3">Referral bonuses are added to your wallet balance automatically.</p>
+                </div>
                 
                 <div className="mt-8">
                     <form onSubmit={handleSubmit}>

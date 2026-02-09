@@ -97,6 +97,12 @@ Note: Use your production URL in Capacitor config when ready.
 - Jobs are visible immediately but labeled **Verification Pending** until reviewed.
 - Safety guidelines are available in the **Safety** page.
 
+## Referral Program
+
+- Each user has a referral link: `/?ref=<user-id>`
+- When a referred user applies for a job, the referrer earns a bonus (see `REFERRAL_BONUS` in `constants.ts`).
+- Referral rewards are added to the wallet automatically.
+
 ## Tailwind CSS
 
 Tailwind is installed via PostCSS. Do not use the CDN script in production.

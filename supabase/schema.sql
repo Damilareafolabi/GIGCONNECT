@@ -7,6 +7,8 @@ create table if not exists profiles (
   name text,
   role text default 'JobSeeker',
   approved boolean default true,
+  referral_code text,
+  referred_by uuid,
   profile_bio text,
   skills text[],
   portfolio_links text[],
@@ -98,6 +100,17 @@ create table if not exists subscribers (
   subscribed_at timestamptz default now()
 );
 
+-- Referral Events
+create table if not exists referral_events (
+  id text primary key,
+  referrer_id uuid references profiles(id) on delete set null,
+  referred_user_id uuid references profiles(id) on delete set null,
+  type text,
+  job_id text references jobs(id) on delete set null,
+  amount numeric,
+  created_at timestamptz default now()
+);
+
 -- Blog Posts
 create table if not exists blog_posts (
   id text primary key,
@@ -161,6 +174,7 @@ alter table messages enable row level security;
 alter table notifications enable row level security;
 alter table reviews enable row level security;
 alter table subscribers enable row level security;
+alter table referral_events enable row level security;
 alter table blog_posts enable row level security;
 alter table wallet_transactions enable row level security;
 alter table payout_requests enable row level security;
@@ -297,6 +311,15 @@ with check (true);
 create policy "Subscribers: admin read"
 on subscribers for select
 using (is_admin(auth.uid()));
+
+-- Referral events policies
+create policy "Referral: referrer read"
+on referral_events for select
+using (auth.uid() = referrer_id or is_admin(auth.uid()));
+
+create policy "Referral: authenticated insert"
+on referral_events for insert
+with check (auth.role() = 'authenticated');
 
 -- Blog posts policies
 create policy "Blog: public read published"

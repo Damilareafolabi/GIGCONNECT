@@ -75,6 +75,18 @@ const recordJobPayment = (job: Job, employerId: string, payeeId: string, amount:
     return { fee, net };
 };
 
+const recordReferralBonus = (referrerId: string, referredUserId: string, jobId: string, amount: number) => {
+    addTransaction({
+        id: `txn-${Date.now()}-ref`,
+        userId: referrerId,
+        direction: 'in',
+        type: 'bonus',
+        amount,
+        description: `Referral bonus: user ${referredUserId} applied to job ${jobId}`,
+        jobId,
+        createdAt: nowIso(),
+    });
+};
 const recordExternalPayment = (
     job: Job,
     employerId: string,
@@ -193,6 +205,7 @@ export const walletService = {
     getUserTransactions,
     recordJobPayment,
     recordExternalPayment,
+    recordReferralBonus,
     requestPayout,
     getAllPayoutRequests: () => storageService.getPayoutRequests(),
     getUserPayoutRequests: (userId: string) => storageService.getPayoutRequests().filter(p => p.userId === userId),

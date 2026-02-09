@@ -112,6 +112,13 @@ export const seoService = {
             return;
         }
 
+        if (view === 'referrals') {
+            setTitle('Referral Center | GigConnect');
+            setMeta('description', 'Invite friends to GigConnect and earn referral bonuses.');
+            setCanonical(`${origin}/referrals`);
+            return;
+        }
+
         seoService.applyDefault();
     },
 };

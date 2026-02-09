@@ -42,6 +42,14 @@ const AppContent: React.FC = () => {
     }, []);
 
     useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const ref = params.get('ref');
+        if (ref) {
+            window.localStorage.setItem('gigconnect_referrer', ref);
+        }
+    }, []);
+
+    useEffect(() => {
         if (!user) {
             seoService.applyForView(authView, authView === 'blogPost' ? { slug: publicBlogSlug } : undefined);
         } else {

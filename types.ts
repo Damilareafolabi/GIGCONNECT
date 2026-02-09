@@ -26,6 +26,8 @@ export interface User {
     name: string;
     role: UserRole;
     approved: boolean;
+    referralCode?: string;
+    referredBy?: string;
 
     // Job Seeker specific
     profileBio?: string;
@@ -138,10 +140,20 @@ export interface WalletTransaction {
     id: string;
     userId: string;
     direction: 'in' | 'out';
-    type: 'earning' | 'payment' | 'payout' | 'refund' | 'hold';
+    type: 'earning' | 'payment' | 'payout' | 'refund' | 'hold' | 'bonus';
     amount: number;
     description: string;
     jobId?: string;
+    createdAt: string;
+}
+
+export interface ReferralEvent {
+    id: string;
+    referrerId: string;
+    referredUserId: string;
+    type: 'signup' | 'application';
+    jobId?: string;
+    amount?: number;
     createdAt: string;
 }
 

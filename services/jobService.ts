@@ -4,6 +4,7 @@ import { Job, Application, JobStatus, ApplicationStatus, UserRole, ExternalPayme
 import { notificationService } from './notificationService';
 import { walletService } from './walletService';
 import { supabaseTableSyncService } from './supabaseTableSyncService';
+import { referralService } from './referralService';
 
 export const jobService = {
     getAllJobs: (): Job[] => {
@@ -71,6 +72,11 @@ export const jobService = {
         supabaseTableSyncService.syncItem('applications', newApplication);
         
         notificationService.createNotification(job.employerId, `You have a new application for "${job.title}".`, { view: 'dashboard', params: {} });
+
+        const seeker = storageService.getUsers().find(u => u.id === jobSeekerId);
+        if (seeker?.referredBy) {
+            referralService.recordApplication(seeker.referredBy, jobSeekerId, jobId);
+        }
 
         return newApplication;
     },
