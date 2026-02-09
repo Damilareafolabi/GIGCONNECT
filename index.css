@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.animate-bob {
+  animation: bob 3s ease-in-out infinite;
+}
+
+@keyframes swing {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(4deg); }
+}
+.animate-swing {
+  animation: swing 2.5s ease-in-out infinite;
+}
+
+@keyframes float-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-float-in {
+  animation: float-in 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes fade-in-text {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-text {
+  animation: fade-in-text 1s ease-out forwards;
+  opacity: 0;
+}
+

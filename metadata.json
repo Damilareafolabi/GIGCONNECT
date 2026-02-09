@@ -1,0 +1,9 @@
+
+{
+  "name": "GigConnect - Freelance Marketplace",
+  "description": "A mobile-friendly freelance and job marketplace application connecting job seekers with employers. Features include user accounts, job postings, applications, messaging, and an admin dashboard, all powered by local storage for a self-contained prototype experience.",
+  "requestFramePermissions": [
+    "geolocation",
+    "camera"
+  ]
+}
