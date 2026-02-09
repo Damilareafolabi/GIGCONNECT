@@ -85,6 +85,12 @@ Fastest path: wrap the PWA with Capacitor.
 
 Note: Use your production URL in Capacitor config when ready.
 
+## Auto SEO + Blog
+
+- SEO meta tags are updated automatically by view (dashboard, blog, post, etc.).
+- Blog auto-publishing is enabled in **Admin → Automation Center**.
+- The auto-blog creates Work News posts on a schedule and can be triggered manually in **Admin → Blog**.
+
 ## Tailwind CSS
 
 Tailwind is installed via PostCSS. Do not use the CDN script in production.
@@ -112,6 +118,8 @@ Tailwind is installed via PostCSS. Do not use the CDN script in production.
 6. Set `VITE_ADMIN_EMAIL` to the email you will use for the admin account.
 
 The app will sync all data to Supabase automatically (no code changes needed). Users will be authenticated by Supabase, and profile data is synced via the Supabase tables.
+
+If you already ran the schema before, re-run it to add the new `blog_posts` table and RLS policies.
 
 ### Important Notes
 - Some policies are intentionally permissive to allow frontend-only operations (notifications and wallet entries). Tighten these once you move financial logic to a backend/edge function.

@@ -5,6 +5,8 @@ import { notificationService } from './notificationService';
 import { radarService } from './radarService';
 import { growthService } from './growthService';
 import { selfHealingService } from './selfHealingService';
+import { blogService } from './blogService';
+import { JobStatus } from '../types';
 
 type AutomationStatus = {
     lastAutoMatchAt?: string;
@@ -12,6 +14,8 @@ type AutomationStatus = {
     lastRadarAt?: string;
     lastGrowthAt?: string;
     lastSelfHealAt?: string;
+    lastAutoPublishAt?: string;
+    lastAutoBlogAt?: string;
 };
 
 const STATUS_KEY = 'automationStatus';
@@ -105,6 +109,57 @@ const runAutoModeration = () => {
     });
 };
 
+const runAutoPublisher = () => {
+    const jobs = storageService.getJobs();
+    const pending = jobs.filter(job => job.status === JobStatus.PendingApproval);
+    if (pending.length === 0) {
+        logEvent({
+            id: `auto-${Date.now()}`,
+            type: 'autoPublisher',
+            message: 'Auto-publisher found no pending jobs.',
+            status: 'warning',
+            createdAt: nowIso(),
+        });
+        return;
+    }
+
+    const safeJobs = pending.filter(job => !/scam|bitcoin|crypto|adult/i.test(job.description));
+    if (safeJobs.length === 0) {
+        logEvent({
+            id: `auto-${Date.now()}`,
+            type: 'autoPublisher',
+            message: 'Auto-publisher skipped all pending jobs due to safety flags.',
+            status: 'warning',
+            createdAt: nowIso(),
+        });
+        return;
+    }
+
+    safeJobs.forEach(job => {
+        job.status = JobStatus.Open;
+        jobService.updateJob(job);
+    });
+
+    logEvent({
+        id: `auto-${Date.now()}`,
+        type: 'autoPublisher',
+        message: `Auto-publisher approved ${safeJobs.length} job(s).`,
+        status: 'success',
+        createdAt: nowIso(),
+    });
+};
+
+const runAutoBlog = () => {
+    const created = blogService.generateAutoPosts(1);
+    logEvent({
+        id: `auto-${Date.now()}`,
+        type: 'autoBlog',
+        message: created.length > 0 ? `Auto-blog published ${created.length} new post.` : 'Auto-blog had nothing to publish.',
+        status: created.length > 0 ? 'success' : 'warning',
+        createdAt: nowIso(),
+    });
+};
+
 export const automationService = {
     getSettings: (): AutomationSettings => {
         const stored = storageService.getAutomationSettings();
@@ -115,6 +170,8 @@ export const automationService = {
             innovationRadar: true,
             growthHunt: true,
             selfHealing: true,
+            autoPublisher: true,
+            autoBlog: true,
         };
         storageService.saveAutomationSettings(defaults);
         return defaults;
@@ -181,6 +238,16 @@ export const automationService = {
                 createdAt: nowIso(),
             });
             status.lastSelfHealAt = nowIso();
+        }
+
+        if (settings.autoPublisher && currentUser?.role === UserRole.Admin && minutesSince(status.lastAutoPublishAt) > 25) {
+            runAutoPublisher();
+            status.lastAutoPublishAt = nowIso();
+        }
+
+        if (settings.autoBlog && currentUser?.role === UserRole.Admin && minutesSince(status.lastAutoBlogAt) > 180) {
+            runAutoBlog();
+            status.lastAutoBlogAt = nowIso();
         }
 
         saveStatus(status);

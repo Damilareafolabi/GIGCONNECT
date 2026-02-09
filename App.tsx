@@ -25,16 +25,28 @@ import Privacy from './components/Privacy';
 import Contact from './components/Contact';
 import { supabaseTableSyncService } from './services/supabaseTableSyncService';
 import AIChatbot from './components/AIChatbot';
+import Blog from './components/Blog';
+import BlogPost from './components/BlogPost';
+import { seoService } from './services/seoService';
 
 const AppContent: React.FC = () => {
     const { user, isGodMode } = useAuth();
     const [currentView, setCurrentView] = useState<View>({ name: 'dashboard' });
-    const [authView, setAuthView] = useState('welcome'); // welcome, login, signup, terms, privacy, contact
+    const [authView, setAuthView] = useState('welcome'); // welcome, login, signup, terms, privacy, contact, blog, blogPost
+    const [publicBlogSlug, setPublicBlogSlug] = useState<string | null>(null);
     useBackgroundAgents(user);
 
     useEffect(() => {
         supabaseTableSyncService.hydrate();
     }, []);
+
+    useEffect(() => {
+        if (!user) {
+            seoService.applyForView(authView, authView === 'blogPost' ? { slug: publicBlogSlug } : undefined);
+        } else {
+            seoService.applyForView(currentView.name, currentView.params);
+        }
+    }, [user, authView, publicBlogSlug, currentView]);
 
     const navigate = (viewName: string, params?: object) => {
         setCurrentView({ name: viewName, params });
@@ -48,7 +60,9 @@ const AppContent: React.FC = () => {
             if (authView === 'terms') return <Terms />;
             if (authView === 'privacy') return <Privacy />;
             if (authView === 'contact') return <Contact />;
-            return <Welcome onLoginClick={() => setAuthView('login')} onSignupClick={() => setAuthView('signup')} />;
+            if (authView === 'blog') return <Blog isPublic onOpenPost={(post) => { setPublicBlogSlug(post.slug); setAuthView('blogPost'); }} />;
+            if (authView === 'blogPost') return <BlogPost slug={publicBlogSlug || undefined} onBack={() => setAuthView('blog')} />;
+            return <Welcome onLoginClick={() => setAuthView('login')} onSignupClick={() => setAuthView('signup')} onBlogClick={() => setAuthView('blog')} />;
         };
 
         return (
@@ -96,6 +110,10 @@ const AppContent: React.FC = () => {
                 return <Privacy />;
             case 'contact':
                 return <Contact />;
+            case 'blog':
+                return <Blog onOpenPost={(post) => navigate('blogPost', { slug: post.slug })} />;
+            case 'blogPost':
+                return <BlogPost slug={currentView.params?.slug} onBack={() => navigate('blog')} />;
             case 'dashboard':
             default:
                 if (user.role === UserRole.Admin) return <AdminDashboard navigate={navigate} />;

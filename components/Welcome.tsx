@@ -4,6 +4,7 @@ import Button from './Button';
 interface WelcomeProps {
     onLoginClick: () => void;
     onSignupClick: () => void;
+    onBlogClick?: () => void;
 }
 
 const Logo = () => (
@@ -29,7 +30,7 @@ const Logo = () => (
     </div>
 );
 
-const Welcome: React.FC<WelcomeProps> = ({ onLoginClick, onSignupClick }) => {
+const Welcome: React.FC<WelcomeProps> = ({ onLoginClick, onSignupClick, onBlogClick }) => {
     const [shareUrl, setShareUrl] = useState('');
     const [copied, setCopied] = useState(false);
 
@@ -120,6 +121,18 @@ const Welcome: React.FC<WelcomeProps> = ({ onLoginClick, onSignupClick }) => {
                     </div>
                 </div>
             </div>
+
+            {onBlogClick && (
+                <div className="mt-16 text-center">
+                    <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Work News Blog</h2>
+                    <p className="text-gray-600 dark:text-gray-300 mt-3">Read hiring trends, career tips, and success stories.</p>
+                    <div className="mt-4">
+                        <button onClick={onBlogClick} className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">
+                            Read the Blog
+                        </button>
+                    </div>
+                </div>
+            )}
 
         </div>
     );

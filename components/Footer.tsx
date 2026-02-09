@@ -7,7 +7,7 @@ import { supabaseTableSyncService } from '../services/supabaseTableSyncService';
 
 interface FooterProps {
     navigate?: NavigateFunction;
-    onNavigatePublic?: (view: 'terms' | 'privacy' | 'contact') => void;
+    onNavigatePublic?: (view: 'terms' | 'privacy' | 'contact' | 'blog') => void;
 }
 
 const Footer: React.FC<FooterProps> = ({ navigate, onNavigatePublic }) => {
@@ -105,6 +105,7 @@ const Footer: React.FC<FooterProps> = ({ navigate, onNavigatePublic }) => {
                 
                 <div className="mt-6 border-t border-gray-300 dark:border-gray-700 pt-4">
                     <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-600 dark:text-gray-400 mb-3">
+                        <button onClick={() => (navigate ? navigate('blog') : onNavigatePublic?.('blog'))} className="hover:underline">Blog</button>
                         <button onClick={() => (navigate ? navigate('terms') : onNavigatePublic?.('terms'))} className="hover:underline">Terms</button>
                         <button onClick={() => (navigate ? navigate('privacy') : onNavigatePublic?.('privacy'))} className="hover:underline">Privacy</button>
                         <button onClick={() => (navigate ? navigate('contact') : onNavigatePublic?.('contact'))} className="hover:underline">Contact</button>

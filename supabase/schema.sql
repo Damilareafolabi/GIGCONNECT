@@ -89,6 +89,25 @@ create table if not exists subscribers (
   subscribed_at timestamptz default now()
 );
 
+-- Blog Posts
+create table if not exists blog_posts (
+  id text primary key,
+  title text,
+  slug text unique,
+  excerpt text,
+  content text,
+  category text,
+  tags text[],
+  author_name text,
+  status text,
+  created_at timestamptz default now(),
+  updated_at timestamptz,
+  published_at timestamptz,
+  cover_image text,
+  is_ai boolean default false,
+  source text
+);
+
 -- Wallet Transactions
 create table if not exists wallet_transactions (
   id text primary key,
@@ -133,6 +152,7 @@ alter table messages enable row level security;
 alter table notifications enable row level security;
 alter table reviews enable row level security;
 alter table subscribers enable row level security;
+alter table blog_posts enable row level security;
 alter table wallet_transactions enable row level security;
 alter table payout_requests enable row level security;
 alter table platform_transactions enable row level security;
@@ -268,6 +288,24 @@ with check (true);
 create policy "Subscribers: admin read"
 on subscribers for select
 using (is_admin(auth.uid()));
+
+-- Blog posts policies
+create policy "Blog: public read published"
+on blog_posts for select
+using (status = 'Published');
+
+create policy "Blog: admin read"
+on blog_posts for select
+using (is_admin(auth.uid()));
+
+create policy "Blog: admin insert"
+on blog_posts for insert
+with check (is_admin(auth.uid()));
+
+create policy "Blog: admin update"
+on blog_posts for update
+using (is_admin(auth.uid()))
+with check (is_admin(auth.uid()));
 
 -- Wallet transactions policies (limited)
 create policy "Wallet: owner read"

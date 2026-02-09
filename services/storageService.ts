@@ -1,5 +1,5 @@
 
-import { User, Job, Application, Message, Notification, UserRole, JobStatus, Review, LogEntry, Subscriber, AutomationSettings, AutomationEvent, RadarFinding, RadarScan, GrowthCampaign, OutreachLead, HealingAction, HealthIncident, WalletTransaction, PayoutRequest, PlatformTransaction } from '../types';
+import { User, Job, Application, Message, Notification, UserRole, JobStatus, Review, LogEntry, Subscriber, AutomationSettings, AutomationEvent, RadarFinding, RadarScan, GrowthCampaign, OutreachLead, HealingAction, HealthIncident, WalletTransaction, PayoutRequest, PlatformTransaction, BlogPost } from '../types';
 
 const get = <T,>(key: string): T | null => {
     try {
@@ -40,6 +40,7 @@ const DATABASE_KEYS = [
     'payoutRequests',
     'platformTransactions',
     'platformRevenue',
+    'blogPosts',
 ] as const;
 
 const seedData = () => {
@@ -85,6 +86,8 @@ const seedData = () => {
                 innovationRadar: true,
                 growthHunt: true,
                 selfHealing: true,
+                autoPublisher: true,
+                autoBlog: true,
             };
             set<AutomationSettings>('automationSettings', defaultSettings);
         }
@@ -100,6 +103,40 @@ const seedData = () => {
         if (!get('payoutRequests')) set<PayoutRequest[]>('payoutRequests', []);
         if (!get('platformTransactions')) set<PlatformTransaction[]>('platformTransactions', []);
         if (!get('platformRevenue')) set<number>('platformRevenue', 0);
+        if (!get('blogPosts')) {
+            const now = new Date().toISOString();
+            const seedPosts: BlogPost[] = [
+                {
+                    id: `blog-${Date.now()}-1`,
+                    title: 'How to Win Your First Client on GigConnect',
+                    slug: 'win-your-first-client-on-gigconnect',
+                    excerpt: 'A simple, proven path to landing your first paid gig with strong proposals and fast delivery.',
+                    content: 'Landing your first client is about clarity and speed. Start with a focused profile, apply to small gigs, and write proposals that show you read the brief. Deliver fast and request a review. Consistency beats perfection.',
+                    category: 'Freelancer Success',
+                    tags: ['freelance', 'clients', 'proposals'],
+                    authorName: 'GigConnect Team',
+                    status: 'Published',
+                    createdAt: now,
+                    publishedAt: now,
+                    isAi: false,
+                },
+                {
+                    id: `blog-${Date.now()}-2`,
+                    title: 'Hiring in 2026: The Skills Clients Want Most',
+                    slug: 'hiring-2026-skills-clients-want',
+                    excerpt: 'The fastest-growing freelance categories and how to position your services.',
+                    content: 'Clients are prioritizing speed, clarity, and measurable impact. The hottest areas remain web development, design systems, marketing automation, data dashboards, and AI-assisted workflows. Focus on outcomes and offer clear milestones.',
+                    category: 'Work News',
+                    tags: ['trends', 'skills', 'hiring'],
+                    authorName: 'GigConnect Team',
+                    status: 'Published',
+                    createdAt: now,
+                    publishedAt: now,
+                    isAi: false,
+                },
+            ];
+            set<BlogPost[]>('blogPosts', seedPosts);
+        }
     }
 };
 
@@ -130,6 +167,8 @@ export const storageService = {
     savePlatformTransactions: (transactions: PlatformTransaction[]) => set('platformTransactions', transactions),
     getPlatformRevenue: () => get<number>('platformRevenue') || 0,
     savePlatformRevenue: (amount: number) => set('platformRevenue', amount),
+    getBlogPosts: () => get<BlogPost[]>('blogPosts') || [],
+    saveBlogPosts: (posts: BlogPost[]) => set('blogPosts', posts),
     getAutomationSettings: () => get<AutomationSettings>('automationSettings'),
     saveAutomationSettings: (settings: AutomationSettings) => set('automationSettings', settings),
     getAutomationEvents: () => get<AutomationEvent[]>('automationEvents') || [],

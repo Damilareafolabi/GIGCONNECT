@@ -164,17 +164,37 @@ export interface ExternalPaymentDetails {
     note?: string;
 }
 
+export interface BlogPost {
+    id: string;
+    title: string;
+    slug: string;
+    excerpt: string;
+    content: string;
+    category: string;
+    tags?: string[];
+    authorName: string;
+    status: 'Draft' | 'Published';
+    createdAt: string;
+    updatedAt?: string;
+    publishedAt?: string;
+    coverImage?: string;
+    isAi?: boolean;
+    source?: string;
+}
+
 export interface AutomationSettings {
     autoMatch: boolean;
     autoModeration: boolean;
     innovationRadar: boolean;
     growthHunt: boolean;
     selfHealing: boolean;
+    autoPublisher: boolean;
+    autoBlog: boolean;
 }
 
 export interface AutomationEvent {
     id: string;
-    type: 'autoMatch' | 'autoModeration' | 'innovationRadar' | 'growthHunt' | 'selfHealing';
+    type: 'autoMatch' | 'autoModeration' | 'innovationRadar' | 'growthHunt' | 'selfHealing' | 'autoPublisher' | 'autoBlog';
     message: string;
     status: 'success' | 'warning' | 'error';
     createdAt: string;

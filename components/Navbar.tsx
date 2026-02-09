@@ -57,6 +57,7 @@ const Navbar: React.FC<NavbarProps> = ({ navigate }) => {
                     <button onClick={() => navigate('dashboard')} className="hidden sm:block text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400">Dashboard</button>
                     <button onClick={() => navigate('messages')} className="hidden sm:block text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400">Messages</button>
                     <button onClick={() => navigate('wallet')} className="hidden sm:block text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400">Wallet</button>
+                    <button onClick={() => navigate('blog')} className="hidden sm:block text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400">Blog</button>
                     
                      <button onClick={toggleTheme} className="text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 p-2 rounded-full" aria-label="Toggle theme">
                         {theme === 'light' ? 
@@ -100,6 +101,10 @@ const Navbar: React.FC<NavbarProps> = ({ navigate }) => {
                 <button onClick={() => navigate('wallet')} className="flex flex-col items-center text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-2m3-3h-6a2 2 0 000 4h6m-3-2h.01" /></svg>
                     <span className="text-xs">Wallet</span>
+                </button>
+                <button onClick={() => navigate('blog')} className="flex flex-col items-center text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14-4H5m14 8H5m14 4H5" /></svg>
+                    <span className="text-xs">Blog</span>
                 </button>
                  <button onClick={() => navigate('profile')} className="flex flex-col items-center text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>

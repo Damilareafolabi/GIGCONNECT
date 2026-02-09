@@ -17,6 +17,7 @@ import SelfHealingCenter from './SelfHealingCenter';
 import PayoutManager from './PayoutManager';
 import { walletService } from '../services/walletService';
 import DataVault from './DataVault';
+import BlogManager from './BlogManager';
 
 interface AdminDashboardProps {
     navigate: NavigateFunction;
@@ -220,6 +221,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate }) => {
                     <button onClick={() => setActiveTab('automation')} className={`${activeTab === 'automation' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}>Automation</button>
                     <button onClick={() => setActiveTab('radar')} className={`${activeTab === 'radar' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}>Innovation Radar</button>
                     <button onClick={() => setActiveTab('growth')} className={`${activeTab === 'growth' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}>Growth Engine</button>
+                    <button onClick={() => setActiveTab('blog')} className={`${activeTab === 'blog' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}>Blog</button>
                     <button onClick={() => setActiveTab('payouts')} className={`${activeTab === 'payouts' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}>Payouts</button>
                     <button onClick={() => setActiveTab('data')} className={`${activeTab === 'data' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}>Data Vault</button>
                     <button onClick={() => setActiveTab('discovery')} className={`${activeTab === 'discovery' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}>Discovery Tool</button>
@@ -236,6 +238,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate }) => {
             {activeTab === 'automation' && <AutomationCenter />}
             {activeTab === 'radar' && <InnovationRadar />}
             {activeTab === 'growth' && <GrowthEngine />}
+            {activeTab === 'blog' && <BlogManager />}
             {activeTab === 'payouts' && <PayoutManager />}
             {activeTab === 'data' && <DataVault />}
             {activeTab === 'discovery' && <ManualDiscoveryTool />}

@@ -35,8 +35,10 @@ const AutomationCenter: React.FC = () => {
                     {([
                         { key: 'autoMatch', label: 'Auto-Match Talent' },
                         { key: 'autoModeration', label: 'AI Moderation' },
+                        { key: 'autoPublisher', label: 'Auto Job Publisher' },
                         { key: 'innovationRadar', label: 'Innovation Radar' },
                         { key: 'growthHunt', label: 'Growth Hunts' },
+                        { key: 'autoBlog', label: 'Auto Blog Publisher' },
                         { key: 'selfHealing', label: 'Self-Healing Bot' },
                     ] as { key: keyof AutomationSettings; label: string }[]).map(item => (
                         <div key={item.key} className="flex items-center justify-between p-4 border rounded-lg dark:border-gray-700">
