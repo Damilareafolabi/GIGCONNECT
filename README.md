@@ -133,5 +133,10 @@ The app will sync all data to Supabase automatically (no code changes needed). U
 
 If you already ran the schema before, re-run it to add the new `blog_posts` table and RLS policies.
 
+## Demo Seed Data
+
+Seed data is **disabled by default**. To enable demo data locally, set:
+`VITE_SEED_LOCAL=true`
+
 ### Important Notes
 - Some policies are intentionally permissive to allow frontend-only operations (notifications and wallet entries). Tighten these once you move financial logic to a backend/edge function.

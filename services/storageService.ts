@@ -45,8 +45,7 @@ const DATABASE_KEYS = [
 ] as const;
 
 const seedData = () => {
-    const hasSupabase = Boolean((import.meta as any)?.env?.VITE_SUPABASE_URL && (import.meta as any)?.env?.VITE_SUPABASE_ANON_KEY);
-    const shouldSeed = !hasSupabase || String((import.meta as any)?.env?.VITE_SEED_LOCAL || '').toLowerCase() === 'true';
+    const shouldSeed = String((import.meta as any)?.env?.VITE_SEED_LOCAL || '').toLowerCase() === 'true';
     if (!shouldSeed) return;
     if (!get('users')) {
         const admin: User = { id: 'admin-1', email: 'admin@gig.co', password: 'admin', name: 'Admin User', role: UserRole.Admin, approved: true, referralCode: 'ref-admin' };
